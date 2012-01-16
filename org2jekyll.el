@@ -6,9 +6,14 @@
 ;; License: GPL v3 or later. <http://www.gnu.org/licenses/gpl.html>
 
 ;;; Description:
-;; Process the org exported html for Jekyll
-;; pieces of this file directly taken from the org2blog
+;; Pieces of this file directly are taken from the org2blog
 ;; https://github.com/punchagan/org2blog
+;;
+;; Post processing of the org exported html for Jekyll.
+;; - write yaml front matter
+;; - convert source code block to be highlight by Jekyll/pygments
+;; Additionally helper function(s) for
+;; - creating template for new posts/pages
 ;;
 ;;
 ;;=================================================================
