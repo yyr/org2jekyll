@@ -66,7 +66,7 @@ new post templates will be placed in `org2jekyll-basedir'/org/_posts/"
 ;;=================================================================
 ;; user functions
 ;;=================================================================
-;;;###autoloads
+;;;###autoload
 (defun org2jekyll-new-post ()
   "Creates a new post/page entry."
   (interactive)
