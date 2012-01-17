@@ -130,7 +130,7 @@ other: '_'
           (setq code (match-string-no-properties 2))
           (setq lang (match-string-no-properties 1))
           ;; When the codeblock is a src_block
-          (if  (string-match "src" lang)
+          (if (save-match-data (string-match "src" lang))
               ;; Stripping out all the code highlighting done by htmlize
               (progn
                 (setq code (replace-regexp-in-string "<.*?>" "" code))
