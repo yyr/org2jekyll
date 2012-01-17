@@ -38,13 +38,13 @@
     published
     comments
     excerpt)
-"list of required fields/properties in the org files. This list will be
+  "list of required fields/properties in the org files. This list will be
 used in `org2jekyll-post-template' and each field will be added in the
 yaml front matter if their value is non-nil"
-:group 'org2jekyll
-:type 'list)
+  :group 'org2jekyll
+  :type 'list)
 
-(defcustom org2jekyll-src-style "```\n %s \n```"
+(defcustom org2jekyll-src-style "```\n %s %s \n```"
   "In jekyll/octopress there are few different ways highlight the
 source code. default is pygments style"
   :group  'org2jekyll
@@ -107,17 +107,42 @@ other: '_'
           al))
   (insert "---\n"))
 
+(defun org2jekyll-process-src ()
+  "Replace pre blocks with sourcecode shortcode blocks."
+  (let (pos code lang)
+    (save-excursion
+      (goto-char (point-min))
+      (save-match-data
+        (while (re-search-forward
+                "<pre\\(.*?\\)>\\(\\(.\\|[[:space:]]\\|\\\n\\)*?\\)</pre.*?>"
+                nil t 1)
+          (setq code (match-string-no-properties 2))
+          (setq lang (match-string-no-properties 1))
+          ;; When the codeblock is a src_block
+          (if (save-match-data (string-match "src"
+                                             lang))
+              ;; Stripping out all the code highlighting done by htmlize
+              (progn
+                (setq code (replace-regexp-in-string "<.*?>" "" code))
+                (save-match-data
+                  (string-match ".*src-\\(.*?\\)?*" lang)
+                  (setq lang (match-string-no-properties 1)))
+                (replace-match
+                 (format org2jekyll-src-style lang code) nil t))
+            ;; swear put it back if its not a code block
+            (insert code)))))))
+
 (defun org2jekyll-process ()
- "Process org exported html.
+  "Process org exported html.
 Process code blocks with `org2jekyll-process-src'
 Write yaml headers with `org2jekyll-write-yaml'
 "
-(save-excursion
-  ;; FIXME can we reduce no of lines with any special form (cond).?
-  (if org2jekyll-write-yaml
-      (funcall 'org2jekyll-write-yaml))
-  (if org2jekyll-process-src
-      (funcall 'org2jekyll-process-src))))
+  (save-excursion
+    ;; FIXME can we reduce no of lines with any special form (cond).?
+    (if org2jekyll-write-yaml
+        (funcall 'org2jekyll-write-yaml))
+    (if org2jekyll-process-src
+        (funcall 'org2jekyll-process-src))))
 
 (add-hook 'org-export-html-final-hook 'org2jekyll-process)
 

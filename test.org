@@ -13,26 +13,28 @@
 * Writing some text
 this is test
 
-* A source code block
-#+name:
+* Code Blocks
+** perl
+#+name: hello-perl
 #+BEGIN_SRC perl
   print "hello world\n";
 #+END_SRC
 
-some shell snippets
+** shell
+#+name: hello-bash
 #+BEGIN_SRC sh
 #some comment
 ./removespaces.sh
 #+END_SRC
 
-some ruby
-#+name:
+** ruby
+#+name: random-ruby
 #+BEGIN_SRC ruby
 require "rdiscount"
 #+END_SRC
 
-some latex
-#+name:
+** latex
+#+name: latex
 #+BEGIN_LATEX
 \hypersetup{
 colorlinks = true,
@@ -45,5 +47,16 @@ pdfpagemode = UseNone
 }
 #+END_LATEX
 
-* Some link
+** An example block
+#+name: example-block
+#+BEGIN_EXAMPLE
+this is an example
+#+END_EXAMPLE
+
+* Some links
+** absolute link
 go to my awesome site home page is [[file:/index.org][here]]
+** relative link
+[[http:../index.org][test]]
+** internal link
+go to my awesome site home page is [[Code%20Blocks][code block section]]
