@@ -11,39 +11,54 @@
 ;;
 ;; Post processing of the org exported html for Jekyll.
 ;; - write yaml front matter
+;;   + set `org2jekyll-post-headers' for your headers, the default is
+;;     '(title date category keywords layout published comments excerpt)
+;;   + set `org2jekyll-write-yaml' to nil to switch off this processing
 ;; - convert source code block to be highlight by Jekyll/pygments
+;;   + set `org2jekyll-process-src' to nil to switch off this processing
 ;; Additionally helper function(s) for
 ;; - creating template for new posts/pages
-;;
 ;;
 ;;=================================================================
 ;;; code starts here
 (require 'org)
+(defgroup org2jekyll nil
+  "Post to weblogs from Emacs"
+  :group 'org2jekyll)
 
 ;;=================================================================
 ;; user options
 ;;=================================================================
+(defcustom org2jekyll-post-headers
+  '(title
+    date
+    category
+    keywords
+    layout
+    published
+    comments
+    excerpt)
+"list of required fields/properties in the org files. This list will be
+used in `org2jekyll-post-template' and each field will be added in the
+yaml front matter if their value is non-nil"
+:group 'org2jekyll
+:type 'list)
 
-(defcustom org2jekyll-post-template
-  "#+TITLE: %s
-#+DATE: %s
-#+CATEGORY:
-#+KEYWORDS:
-#+LAYOUT: post
-#+PUBLISHED: true
-#+COMMENTS: true
-#+DESCRIPTION:
-
-#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
-\n"
-  "The default template to be inserted in a new post buffer."
-  :group 'org2jekyll
-  :type 'string)
-
-(defcustom org2jekyll-src-template "```\n %s \n```"
-  "In jekyll/octopress few different highlight the source code"
+(defcustom org2jekyll-src-style "```\n %s \n```"
+  "In jekyll/octopress there are few different ways highlight the
+source code. default is pygments style"
   :group  'org2jekyll
   :type 'string)
+
+(defcustom org2jekyll-process-src nil
+  "Clean org exported source code and place preferred jekyll format"
+  :group 'org2jekyll
+  :type 'boolean)
+
+(defcustom org2jekyll-write-yaml t
+  "Clean org exported source code and place preferred jekyll format"
+  :group 'org2jekyll
+  :type 'boolean)
 
 (defcustom org2jekyll-basedir nil
   "root directory of the jekyll/octopress site
@@ -51,17 +66,60 @@ new post templates will be placed in `org2jekyll-basedir'/org/_posts/"
   :group  'org2jekyll
   :type 'string)
 
+;;=================================================================
+;; internal variables
+;;=================================================================
 (defvar org2jekyll-buffer-name "%s-%s.org"
   "Name of the post buffer")
 
 ;;=================================================================
-;; internal variables
-;;=================================================================
-
-
-;;=================================================================
 ;; Internal functions
 ;;=================================================================
+
+;;; let org know our default headers
+(add-hook 'org-export-first-hook
+          (lambda ()
+            (setq org-export-inbuffer-options-extra
+                  (mapcar (lambda (x)
+                            (let ((prop (format  "%s" x)))
+                              (list (format "%s" (upcase prop))
+                                    (intern (concat ":" prop)))))
+                          org2jekyll-post-headers))))
+
+(defun org2jekyll-write-yaml ()
+  "inserts jekyll headers at the beginning of the buffer
+---
+title: XXX
+other: '_'
+---"
+  (goto-char (point-min))
+  (insert "---\n")
+  (let ((al org2jekyll-post-headers))
+    (mapc (lambda (x)
+            (let* ((prop (format  "%s" x))
+                   (val (plist-get
+                         org-export-opt-plist
+                         (intern (concat ":" prop)))))
+
+              (if val
+                  (insert (downcase prop) ": "
+                          val "\n"))))
+          al))
+  (insert "---\n"))
+
+(defun org2jekyll-process ()
+ "Process org exported html.
+Process code blocks with `org2jekyll-process-src'
+Write yaml headers with `org2jekyll-write-yaml'
+"
+(save-excursion
+  ;; FIXME can we reduce no of lines with any special form (cond).?
+  (if org2jekyll-write-yaml
+      (funcall 'org2jekyll-write-yaml))
+  (if org2jekyll-process-src
+      (funcall 'org2jekyll-process-src))))
+
+(add-hook 'org-export-html-final-hook 'org2jekyll-process)
 
 ;;=================================================================
 ;; user functions
@@ -87,7 +145,6 @@ new post templates will be placed in `org2jekyll-basedir'/org/_posts/"
      (format org2jekyll-post-template
              title
              date))))
-
 
 (provide 'org2jekyll)
 ;;; org2jekyll.el ends here

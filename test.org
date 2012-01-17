@@ -1,0 +1,49 @@
+#+TITLE: Test org file for org2jekyll
+#+DATE: 1902-03-03
+#+CATEGORY: test
+#+KEYWORDS: elisp,emacs
+#+LAYOUT: post
+#+PUBLISHED: false
+#+COMMENTS:true
+#+EXCERPT: test suit for differnt post processes are done by org2jekyll
+
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
+#+OPTIONS: body-only:t
+
+* Writing some text
+this is test
+
+* A source code block
+#+name:
+#+BEGIN_SRC perl
+  print "hello world\n";
+#+END_SRC
+
+some shell snippets
+#+BEGIN_SRC sh
+#some comment
+./removespaces.sh
+#+END_SRC
+
+some ruby
+#+name:
+#+BEGIN_SRC ruby
+require "rdiscount"
+#+END_SRC
+
+some latex
+#+name:
+#+BEGIN_LATEX
+\hypersetup{
+colorlinks = true,
+urlcolor = black,
+pdfauthor = {\name},
+pdfkeywords = {meteorology, atmosphere, oceanography},
+pdftitle = {\name: Curriculum Vitae},
+pdfsubject = {Curriculum Vitae},
+pdfpagemode = UseNone
+}
+#+END_LATEX
+
+* Some link
+go to my awesome site home page is [[file:/index.org][here]]

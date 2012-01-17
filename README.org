@@ -1,3 +1,2 @@
-Please come back later.
 
-See the description in the elisp file
+* See the description in org2jekyll.el
