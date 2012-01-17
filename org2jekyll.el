@@ -44,13 +44,13 @@ yaml front matter if their value is non-nil"
   :group 'org2jekyll
   :type 'list)
 
-(defcustom org2jekyll-src-style "```\n %s %s \n```"
+(defcustom org2jekyll-src-style "``` %s  \n %s```"
   "In jekyll/octopress there are few different ways highlight the
 source code. default is pygments style"
   :group  'org2jekyll
   :type 'string)
 
-(defcustom org2jekyll-process-src nil
+(defcustom org2jekyll-process-src t
   "Clean org exported source code and place preferred jekyll format"
   :group 'org2jekyll
   :type 'boolean)
