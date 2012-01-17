@@ -7,8 +7,11 @@
 #+COMMENTS:true
 #+EXCERPT: test suit for differnt post processes are done by org2jekyll
 
+#+MATHJAX: align:"left" mathml:t path:"./MathJax.js"
 #+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil TeX:nil
 #+OPTIONS: body-only:t
+#+OPTIONS: LaTeX:dvipng
+#+OPTIONS: LaTeX:t
 
 * Writing some text
 this is test
