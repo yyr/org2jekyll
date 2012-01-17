@@ -124,9 +124,8 @@ other: '_'
               ;; Stripping out all the code highlighting done by htmlize
               (progn
                 (setq code (replace-regexp-in-string "<.*?>" "" code))
-                (save-match-data
-                  (string-match ".*src-\\(.*?\\)?*" lang)
-                  (setq lang (match-string-no-properties 1)))
+                (setq lang (replace-regexp-in-string
+                            "^.*src-\\(.*?\\)\"$" "\\1" lang))
                 (replace-match
                  (format org2jekyll-src-style lang code) nil t))
             ;; swear put it back if its not a code block
