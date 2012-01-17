@@ -130,8 +130,7 @@ other: '_'
           (setq code (match-string-no-properties 2))
           (setq lang (match-string-no-properties 1))
           ;; When the codeblock is a src_block
-          (if (save-match-data (string-match "src"
-                                             lang))
+          (if  (string-match "src" lang)
               ;; Stripping out all the code highlighting done by htmlize
               (progn
                 (setq code (replace-regexp-in-string "<.*?>" "" code))
@@ -139,8 +138,8 @@ other: '_'
                             "^.*src-\\(.*?\\)\"$" "\\1" lang))
                 (replace-match
                  (format org2jekyll-src-style lang code) nil t))
-            ;; swear put it back if its not a code block
-            (insert code)))))))
+            ;; swear leave alone if its not a code block
+            ))))))
 
 (defun org2jekyll-process ()
   "Process org exported html.
