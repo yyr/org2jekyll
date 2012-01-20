@@ -175,16 +175,20 @@ Write yaml headers with `org2jekyll-write-yaml'
           ;; collect the title in the mini buffer
           (read-string "Title of the new post: " nil nil "no-title"))
          (date (format-time-string "%Y-%m-%d" (current-time)))
-         (date (read-string (format "Date for the new post %s:" date)
+         (date (read-string (format "Date for the new post %s: " date)
                             nil nil date))
-         (org2jekyll-new-post-buffer
-          (generate-new-buffer
-           (format org2jekyll-buffer-name
-                   date
-                   title)))
+         (bf (format "%s-%s.org" date title))  ;construct buffer
          ;; since this is post layout is post
          (layout "post"))
-    (switch-to-buffer org2jekyll-new-post-buffer)
+    (if org2jekyll-basedir
+        (progn
+          (find-file (concat (file-name-directory
+                              (concat org2jekyll-basedir "/org/_post"))
+                             "/" bf))
+
+          bf)
+      (error "Please set `org2jekyll-basedir'"
+             "variable to create the new file"))
     (insert
      (apply 'format org2jekyll-post-template
             (mapcar (lambda (x)
@@ -195,5 +199,5 @@ Write yaml headers with `org2jekyll-write-yaml'
     (org-mode)))
 
 
-(Provide 'org2jekyll)
+(provide 'org2jekyll)
 ;;; org2jekyll.el ends here
