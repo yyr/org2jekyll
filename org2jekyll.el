@@ -187,8 +187,13 @@ Write yaml headers with `org2jekyll-write-yaml'
     (switch-to-buffer org2jekyll-new-post-buffer)
     (insert
      (apply 'format org2jekyll-post-template
-            org2jekyll-post-headers))
+            (mapcar (lambda (x)
+                      (if (boundp x)
+                          (symbol-value x)
+                        ""))
+                    org2jekyll-post-headers)))
     (org-mode)))
+
 
 (Provide 'org2jekyll)
 ;;; org2jekyll.el ends here
