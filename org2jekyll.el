@@ -83,6 +83,17 @@ new post templates will be placed in `org2jekyll-basedir'/org/_posts/"
 (defvar org2jekyll-buffer-name "%s-%s.org"
   "Name of the post buffer")
 
+(defvar org2jekyll-post-template
+  (mapconcat (lambda (x)
+               (let ((pfix "#+")
+                     (tail ": %s"))
+                 (format "%s%s%s"
+                         pfix
+                         (upcase (symbol-name x))
+                         tail)))
+             org2jekyll-post-headers "\n")
+  "construct org file header proprieties based on the variable `org2jekyll-post-headers'")
+
 ;;=================================================================
 ;; Internal functions
 ;;=================================================================
@@ -158,7 +169,7 @@ Write yaml headers with `org2jekyll-write-yaml'
 ;;=================================================================
 ;;;###autoload
 (defun org2jekyll-new-post ()
-  "Creates a new post/page entry."
+  "Creates a new post entry."
   (interactive)
   (let* ((title
           ;; collect the title in the mini buffer
@@ -170,13 +181,14 @@ Write yaml headers with `org2jekyll-write-yaml'
           (generate-new-buffer
            (format org2jekyll-buffer-name
                    date
-                   title))))
+                   title)))
+         ;; since this is post layout is post
+         (layout "post"))
     (switch-to-buffer org2jekyll-new-post-buffer)
-    (org-mode)
     (insert
-     (format org2jekyll-post-template
-             title
-             date))))
+     (apply 'format org2jekyll-post-template
+            org2jekyll-post-headers))
+    (org-mode)))
 
-(provide 'org2jekyll)
+(Provide 'org2jekyll)
 ;;; org2jekyll.el ends here
