@@ -195,5 +195,5 @@ Write yaml headers with `org2jekyll-write-yaml'
     (org-mode)))
 
 
-(Provide 'org2jekyll)
+(provide 'org2jekyll)
 ;;; org2jekyll.el ends here
