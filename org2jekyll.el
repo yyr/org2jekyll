@@ -187,7 +187,7 @@ Write yaml headers with `org2jekyll-write-yaml'
                              "/" bf))
 
           bf)
-      (error "Please set `org2jekyll-basedir'"
+      (error "Please set `org2jekyll-basedir' %s"
              "variable to create the new file"))
     (insert
      (apply 'format org2jekyll-post-template
